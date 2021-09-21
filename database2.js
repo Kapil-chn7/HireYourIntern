@@ -1,14 +1,16 @@
 const mongoose=require('mongoose');
 const postSchema=mongoose.Schema({
 
-userPost:{
-    type:Object,
-    required:false
-},
-userPostImage:{
-    type:Object,
-    required:false
-},
+// userPost:{
+//     type:Object,
+//     required:false
+// },
+// userPostImage:{
+//     type:Object,
+//     required:false
+// },
+userPostData:[Object]
+,
 authentication_Id:{
     type:String,
     required:true

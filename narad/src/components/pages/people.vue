@@ -8,18 +8,18 @@
         </div>
         <div class="cls2">
 
-            <accountcomp  v-show="friends" class="box2"/>
+            <!-- <accountcomp  v-show="friends" class="box2"/> -->
         </div>
     </div>
 </template>
 
 
 <script>
-import accountcomp from '../accountcomp/profilecard'
+// import accountcomp from '../accountcomp/profilecard'
 export default {
     
     components:{
-        accountcomp
+        // accountcomp
     },
     data(){
         return {

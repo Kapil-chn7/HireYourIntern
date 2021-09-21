@@ -1,5 +1,5 @@
 <template>
-<!-- <div>
+<div>
     <div class="column-wrapper" id="blur">
         <div class="col-1wrapper">
             <partone/>
@@ -11,8 +11,7 @@
                     <status class="status"/>
                 </div>
                 <div class="col-2wrapperchild2">
-                       <sharepost class="sharepost"/>
-                      
+                       <sharepost class="sharepost" id="popup"/>
 
                 </div>
                 <div class="col-2wrapperchild3">
@@ -66,78 +65,12 @@
             <h1>part three</h1>
         </div>
     </div>
-    <div>
-            <sharepostcomp id="popup"/>
-     
-    </div>
-    </div> -->
-    
-
-
-    <div class="container-fluid parentdiv" id="blur" style="background-color:yellow">
+    <div class="outsideCol">
         
-        <div class="row ">
-         
-            
-         
-            <div class="col-lg-3 d-none d-lg-block">
-                <partone class="row"/>
-            </div>
-            <div class="col-lg-7 col-md-9 " id="please-scroll" style="background-color:green">
-                <div class="container">
-                <div class="row bg-light mt-4">
-                    <status />
-                </div>
-                <div class="row bg-light mt-4">
-                    <sharepost/>
-                </div>
-                <div class="row">
-                    <div class="container "  >
-
-                            
+        <sharepostcomp class="sharepost1"/>
+    </div>
+    </div>
     
-                </div>
-                </div>
-            </div>
-            </div>
-            <div class="col-lg-2 col-md-3 d-none d-md-block ">
-                    <div class="container bg-light">
-                        
-                        <div class="row">
-                                <friendslist/>
-                  </div>
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <!-- <div class="container">
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-2">
-      1 of 3
-    </div>
-    <div class="col-md-auto">
-      Variable width content
-    </div>
-    <div class="col col-lg-2">
-      3 of 3
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      1 of 3
-    </div>
-    <div class="col-md-auto">
-      Variable width content
-    </div>
-    <div class="col col-lg-2">
-      3 of 3
-    </div>
-  </div>
-</div> -->
-
-
 </template>
 
 <script>
@@ -145,14 +78,13 @@
 import partone from "../homepagecomponent/partone"
 import status from "../profilecomp/status"
 import sharepost from "../homepagecomponent/popup"
-import friendslist from "../homepagecomponent/friendslist.vue"
-
+import sharepostcomp from "../homepagecomponent/post"
 export default {
     name:'homepagecomp',
     components:{
        status,
        sharepost,
-        friendslist,
+       sharepostcomp,
        partone
        
     }
@@ -161,31 +93,17 @@ export default {
 </script>
 
 
-<style>
-.sidebarcol{
-    position: absolute;
-    margin-left: 0px;
-    top:350px;
-}
-/* .statusclass{
-    position: relative;
-} */
-#please-scroll{
-  height: calc(100vh - 110px);
-  overflow-y: scroll;
-  overflow-x: none;
-}
+<style scoped>
 .outsideCol{
     position: relative;
     top:50%;
     left: 55%;
     height: 400px;
     width: 400px;
-
+    background-color: green;
     transform: translate(-50%,-50%);
    
 }
-
 
 /* .col-1z{
     position: absolute;
@@ -247,43 +165,32 @@ export default {
     height: 90vh;
 }
 */
-/*
-.sharepost{
+
+/* .sharepost{
     position: relative;
     top:20px;
     margin-left: 30px;
  
     
 } */
-/* .dummy{
+.dummy{
     height:400px;
     width:500px;
     background-color: orange;
     margin:40px;
-}  */
-
-.seeAllPost{
-    overflow: scroll;
-}
-.dummy{
-    background-color: orange;
-    height:auto;
-    width:auto;
-    margin:10px;
-}
+} 
 
 .column-wrapper{
-       position: relative;
-       /* z-index: -1; */
+       position: absolute;
     height: 80vh;
     width: 100%;
-    top:0px;
+    top:70px;
     background-color: grey;
    transition: 0.5s;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    grid-gap:2px;
-    
+    grid-gap:1em;
+    overflow: auto;
 }
 .col-3wrapper{
     
@@ -297,10 +204,10 @@ export default {
     position: relative;
  display: grid;
   
-  grid-template-rows: 250px 300px auto;
+  grid-template-rows: 250px 300px 200px;
   grid-gap: 10px;
   background-color: #2196F3;
-  overflow: scroll;
+   overflow: scroll;
    
   
 }
@@ -337,19 +244,9 @@ export default {
    
 }
 .col-2wrapperchild3{
-    position:relative;
- background-color: blue;
-
+ background-color: blueviolet;
+ overflow: auto;
   
-}
-.parentdiv{
-    position: relative;
-    overflow-x: non;
-}
-@media screen and (min-width: 0px) and (max-width: 993px) {
-.statusclass{
-    position: absolute;
-}
 }
 </style>
 

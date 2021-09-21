@@ -3,16 +3,21 @@ import axios from 'axios'
 import App from './App.vue'
 import {createRouter,createWebHistory} from 'vue-router'
 import homepage from '../src/components/pages/homepage'
-import search from '../src/components/pages/search'
 import profile from '../src/components/pages/profile'
 import profileEdit from '../src/components/pages/editProfile'
-import chat from '../src/components/pages/chat'
+import createProject from '../src/components/pages/createProject'
 import homepagecomp from '../src/components/layout/header'
 import simplebar from 'simplebar-vue';
 import account from '../src/components/pages/Account';
+import teams from '../src/components/pages/teams';
+import yourProjects from '../src/components/pages/yourProjects';
+import collaborate from '../src/components/pages/collaborate'
 import people from '../src/components/pages/people';
+import friendListPage from '../src/components/pages/friends.vue';
+import register from '../src/components/pages/register.vue';
 import signupform from '../src/components/profilecomp/signuporlogin.vue';
 import signjoinform from '../src/components/profilecomp/signupcomp.vue'
+import search from '../src/components/pages/search'
 import 'simplebar/dist/simplebar.min.css';
 import VueCookies from 'vue3-cookies'
 import store from "../store/store"
@@ -22,217 +27,96 @@ import store from "../store/store"
 
 const router=createRouter({
     routes: [
-        {path:'/home', component:homepage,
-      beforeEnter:async(to)=>{
-      //   const { $cookies } = router.app.config.globalProperties
-      //   var loggedIn=false;
-      //   var cookieValue=$cookies.get('session_Id') 
-      //   console.log("value",cookieValue);
-      //   if(cookieValue==null ){
+        {path:'/home', component:homepage,meta:{requiresAuth:true}},
+        {path:'/auth/google/Profile', component:profile,meta:{requiresAuth:true}},
+        {path:'/createProject', component:createProject,meta:{requiresAuth:true}},
+        {path:'/homepagecomp',component:homepagecomp,meta:{requiresAuth:true}},
+        {path:'/account',component:account,meta:{requiresAuth:true}},
+        {path:'/people',component:people,name:'people',meta:{requiresAuth:true}},
+        //signup route is here
+        {path:'/signup',name:'signup',component:signupform},
+        {path:'/register',name:'register',component:register},
+        {path:'/joinsignup', component:signjoinform},
+        {path:'/editProfile', component:profileEdit, meta:{requiresAuth:true}},
+        {path:'/projects', component:yourProjects,meta:{requiresAuth:true}},
+        {path:'/teams', component:teams,meta:{requiresAuth:true}},
+        {path:'/search',component:search,meta:{requiresAuth:true}},
+        {path:'/collaborate',component:collaborate,meta:{requiresAuth:true}},
+        {path:'/friends',component:friendListPage,meta:{requiresAuth:true}}
+     
+    ],
+    history:createWebHistory()
+});
 
-      //     loggedIn==false;
-      //     next({
-      //       path:"/signup"
-      //     })
-    
-      //    }
-      //    else {
-      //     axios.post('/api/validateUser',cookieValue)
-      //     .then(resp=>{console.log("User exist",resp)})
-      //     .catch(err=>console.log("This is the error",err))
-      // }
+//router guards
+router.beforeEach(async(to,from,next)=>{
 
-      // }
-    
-    
-    
-    
-    
-    
-    
+  var loggedIn=false;
+   
+  console.log(loggedIn,"....",from.path,to.path)
 
-      var loggedIn=false;
-          
-console.log(loggedIn)
-
-      //   try{
-      //     var cookieValues=await axios.post('http://localhost:5000/checkCookies');
-      //   console.log("cookieValuessss",cookieValues.data);
-      //   if(cookieValues==false ){
-
-      //     loggedIn=false;
-      //     console.log("l0",loggedIn)
-      //     next({
-      //       path:"/signup"
-      //     })
-    
-      //    }
-      //    else {
-      //     axios.post('/api/validateUser',cookieValues)
-      //     .then(resp=>{console.log("User exist",resp)})
-      //     .catch(err=>console.log("This is the error",err))
-      // }
-
-      //   }
-      //   catch(err){
-      //     console.log("This is is the error",err)
-      //   }
-        
-
-    
+      
+      var userIsLoggedIn=store.getters.getuserIsLoggedIn;
+      console.log("UserLoggedIn",userIsLoggedIn)
+    if(!userIsLoggedIn && to.meta.requiresAuth){
+  
       try{
-        axios('http://localhost:5000/checkCookies',{method:"post"
-    ,withCredentials:true})
+        await axios('http://localhost:5000/checkCookies',{method:"post",withCredentials:true})
     .then((resp)=>{
       console.log("This is The responsess",resp.data);
       if(resp.data.exist==false){
         console.log("User do not exist");
         store.commit('changePath',to.path);
-     router.push('/signup');
+    //  router.push('/signup');
+    
+    store.commit('userIsLoggedInChange',false)
     
         
       }
-      else{
+      else if(resp.data.exist==true){
         console.log("he exist");
-        router.push('/home')
+    
+        store.commit('userIsLoggedInChange',true);
+        store.commit('userId',resp.data.userId);
+     
+        // router.push('/home')
       }
       
  
     })
     .catch(err=>{
       console.log("Thsi si the error",err);
+  
+      store.commit('userIsLoggedInChange',false);
+      store.commit('changePath',to.path);
     })
-    // console.log("cookieValuessss",cookieValues.data.exist);
-    // if(cookieValues.data.exist==false ){
-
-    //   loggedIn=false;
-    //   console.log("l0",loggedIn)
-    //   next({
-    //     path:"/signup"
-    //   })
-
-    //  }
-  //    else {
-  //    await axios.post('/api/validateUser',cookieValues.data.cookievalue)
-  //     .then(resp=>{console.log("User existdafasdffa",resp);
-
-  //     next({name:'people'})
-    
-    
-    
-  //   })
-  //     .catch(err=>console.log("This is the error",err))
-  // }
+   
 }
   catch(err){
-    console.log("THis is the error form the catch block",err)
+    console.log("THis is the error form the catch block",err);
+
+    store.commit('userIsLoggedInChange',false);
+    store.commit('changePath',to.path);
   }
-        }},
-        {path:'/auth/google/Profile', component:profile},
-        {path:'/Seach/:Search', component:search},
-        {path:'/auth.google/Profile/Chat/:userid', component:chat},
-        {path:'/homepagecomp',component:homepagecomp},
-        {path:'/account',component:account},
-        {path:'/people',component:people,name:'people',
-        beforeEnter:async(to,from)=>{
-          
-
-          var loggedIn=false;
-          console.log("this sito and fron",to,from,loggedIn)
-
-
-          
-
-
-        //   try{
-        //     var cookieValues=await axios.post('http://localhost:5000/checkCookies');
-        //   console.log("cookieValuessss",cookieValues.data);
-        //   if(cookieValues==false ){
-  
-        //     loggedIn=false;
-        //     console.log("l0",loggedIn)
-        //     next({
-        //       path:"/signup"
-        //     })
       
-        //    }
-        //    else {
-        //     axios.post('/api/validateUser',cookieValues)
-        //     .then(resp=>{console.log("User exist",resp)})
-        //     .catch(err=>console.log("This is the error",err))
-        // }
+  if(!store.getters.getuserIsLoggedIn){
+    console.log("Inside of the meta")
+    next('signup');
+  }
+  else{
+    next();
+  }
 
-        //   }
-        //   catch(err){
-        //     console.log("This is is the error",err)
-        //   }
-          
-
-          try{
-            axios('http://localhost:5000/checkCookies',{method:"post"
-        ,withCredentials:true})
-        .then((resp)=>{
-          console.log("This is The responsess",resp.data);
-          if(resp.data.exist==false){
-            console.log("User do not exist");
-            store.commit('changePath',to.path);
-         router.push('/signup');
-        
-            
-          }
-          else{
-            console.log("he exist");
-            router.push('/people')
-          }
-          
-     
-        })
-        .catch(err=>{
-          console.log("Thsi si the error",err);
-        })
-        // console.log("cookieValuessss",cookieValues.data.exist);
-        // if(cookieValues.data.exist==false ){
-
-        //   loggedIn=false;
-        //   console.log("l0",loggedIn)
-        //   next({
-        //     path:"/signup"
-        //   })
-    
-        //  }
-      //    else {
-      //    await axios.post('/api/validateUser',cookieValues.data.cookievalue)
-      //     .then(resp=>{console.log("User existdafasdffa",resp);
-
-      //     next({name:'people'})
-        
-        
-        
-      //   })
-      //     .catch(err=>console.log("This is the error",err))
-      // }
     }
-    catch(err){
-      console.log("THis is the error form the catch block",err)
-    }
-  
-        }
-      },
-        {path:'/signup',name:'signup',component:signupform,
-      
-      
-      },
-        {path:'/joinsignup', component:signjoinform},
-        {path:'/editProfile', component:profileEdit}
-        // {
-        //   // path: "*",
-        //   : "/:catchAll(.*)",
-        //   name:path "NotFound",
-        //   component: signupform
-        // }
-    ],
-    history:createWebHistory()
-});
+         
+else{
+  console.log("This is inside of the else")
+  next();
+}
+
+})
+
+
 
 
 //this is for the authentication
@@ -258,26 +142,7 @@ router.app = app
 
 
 
-// router.beforeEach((to,from,next)=>{
-//   console.log("a",axios);
- 
-//   console.log("to and from",to, from,++i);
 
-// console.log("This isro ",to, from)
-// console.log("coo",VueCookies)
-//    // Code that will run only after the
-//    // entire view has been rendered
-
-//    if( i<=1){
-
-     
-//    }
- 
-   
- 
-
- 
-// })
 export default {
     components: {
       simplebar

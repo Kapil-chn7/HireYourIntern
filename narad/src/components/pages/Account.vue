@@ -1,78 +1,41 @@
 <template>
    <div>
 
-       <div v-if="showLoader" >
+              <div v-if="showLoader" >
         <LoopingRhombusesSpinner
                 :animation-duration="2500"
                 :rhombus-size="15"
                 color="white"
-                id="spinner"
-                />
+                id="spinner" />
     </div>
-        <div class="account-col1" v-else>
-<!-- 
-        <div class="account-col3">
-        <div class="acc-col2">
 
-        </div>
-        </div>
-    <br>
-        <div class="account-col4">
+         
+       <div  v-else class="container bg-danger " >
+           
+      <profilecard class="col-lg-6  col-md-10 "/>
 
-            <span>Your Name</span>
-            <span>BIO </span>
-            <span>Groups</span>
-            <span>Photos</span>
-        </div> --> 
-
-
-        <div class="box1">
-            <router-link to="/editProfile">
-
-            Edit Your Profile
-            
-            </router-link>
-        </div>
-
-        <profilecard class="box2">
-
-
-
-       
           
-        </profilecard>
-  
-        <div class="box3">
-           kjaskDJ
-        </div>
-        <div class="box4">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
-            Debitis culpa saepe delectus voluptas porro fuga iure eos accusamus 
-            libero voluptate. Quaerat sed placeat optio ad vel quae soluta, in
-             accusantium, deleniti error officia voluptatem magnam totam expedita 
-             maiores cumque iure.
-        </div>
+       </div>
 
-        <div class="box5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati at reprehenderit nihil delectus nulla ex veritatis perferendis! Quia quae aut vero inventore! Voluptate, ex. Commodi aut tenetur ullam vero dignissimos.
-        </div>
-        
-    </div>
-    
+     
    </div>
+ 
+
+
+
+    
+  
 </template>
 
 <script>
 import { LoopingRhombusesSpinner } from 'epic-spinners'
-import profilecomp from '../accountcomp/profilecard'
+
 import profilecard from '../accountcomp/profilecard.vue'
 export default {
   components: { profilecard,
   LoopingRhombusesSpinner },
     name:'Account',
-    component:{
-        profilecomp
-    },
+  
     data(){
         return {
 
@@ -89,7 +52,7 @@ export default {
 ,
     beforeMount(){
         this.$store.state.showLoader=true;
-        this.$store.dispatch('getUserData','114119276291106471990');
+        this.$store.dispatch('getUserData');
 
     }
 }

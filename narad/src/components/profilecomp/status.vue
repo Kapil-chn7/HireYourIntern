@@ -1,11 +1,41 @@
 <template>
-    <div  class="status-0"  >
+    <!-- <div  class="status-0"  >
 
         <span v-for="data in datas" :key="data">
       <div class="status-1" >
     {{data}}
       </div>
     </span>
+ 
+    </div> -->
+
+    <div class="container parentdivclass  " style="background-color:red">
+      
+        <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+                <div class="images">
+          <img src="../../components/accountcomp/logo.png" class="img-fluid" alt="">
+        </div>
+      
  
     </div>
 </template>
@@ -16,7 +46,7 @@ export default {
     data(){
 
         return{
-            datas:["kapil","ashish","satish","mamta"]
+            datas:["kapil","ashish","satish","mamta","kapil","ashish","satish","mamta"]
         }
         
     }
@@ -26,6 +56,21 @@ export default {
 
 <style scoped>
 
+
+.parentdivclass{
+  max-width: auto;
+  height: 200px;
+  display: flex;
+  overflow-x:auto;
+}
+.parentdivclass .images{
+  min-width: 110px;
+  height: 110px;
+  line-height: 110px;
+  text-align: center;
+  background-color:#ddd;
+  margin-left: 10px;
+}
    .status-1{
      
         top:20px;
@@ -36,18 +81,19 @@ export default {
        margin:5px;
        display: flex;
       
+      
    }
 
      .status-0{
-       position: absolute;
-       top:70px;
-       width:760px;
-       margin-left: 10px;
+       position: relative;
+       
+       width:auto;
+      
        height:224px;
-       background-color: white;
-       overflow:auto;
-        display: flex;
-       flex-direction: row;
+       
+       overflow-x:auto;
+       white-space: nowrap;
+      
      
    }
    h1{

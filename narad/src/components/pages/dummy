@@ -1,0 +1,68 @@
+// <template>
+//     <div class="parentcol">
+
+//         <div class="col0z" id="blur" >
+//         <div class="col-1z">
+
+//                 <partone/>
+//         </div>
+       
+//         <div class="colChild">
+   
+//                     <status class="status"/>
+//                     <sharepost class="sharepost"/>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div><div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+//                     <div class="dummy">
+
+//                     </div>
+                    
+
+//         </div>
+        
+        
+//         <div class="col-2z">
+
+//             <h1>part three</h1>
+//         </div>
+//     </div>
+//     <div>
+//         <sharepostcomp/>
+//     </div>
+    
+
+//     </div>
+// </template>

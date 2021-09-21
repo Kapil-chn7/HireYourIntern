@@ -1,9 +1,9 @@
 <template>
     
         
-       <div class="popcol" id="popup" >
+       <div class="container popcol" id="popup" >
 
-           <div class="popup-col1">
+           <div class="row popup-col1">
                <h1>Create Post</h1>
                <i class="fas fa-window-close" @click="fun" id="cancel"></i>
                
@@ -28,15 +28,44 @@
                 </section>
            </div>
           
-               <textarea name="Whats in your mind" id="" cols="30" rows="5" class="popup-col2" v-model="postData">hi this is me</textarea>
+               <textarea name="Whats in your mind" id="" cols="30" rows="5" class="row popup-col2" v-model="postData">hi this is me</textarea>
 
         
-        <div class="popup-col3">
+        <div class="row popup-col3">
             <input type="file" id="postImage" @change="validPost">
             <label for="postImage"><i class="fas fa-images" id="postId"></i></label>
             <button @click="sendPost">Post</button>
         </div>
 
+
+
+
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                Launch demo modal
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
         
     </div>
        
@@ -66,6 +95,7 @@ export default {
            this.file=event.target.files[0];
        },
         fun(){
+            
             var blur=document.getElementById('blur');
             blur.classList.toggle('active');
               var popup=document.getElementById('popup');
@@ -101,12 +131,7 @@ export default {
 
 <style scoped>
 
-#popup.active{
-    top:40%;
-    visibility: visible;
-    opacity:1;
-    transition: 0.5s;
-}
+
 .popcol{
     border:1px solid black;
     width:500px;
@@ -116,8 +141,14 @@ export default {
     left:740px;
     transform:translate(-50%,-50%);
     box-shadow: 0 5px 30px rgba(0,0,0,.30);
-    background-color: white;
+    background-color: rgb(65, 9, 9);
     visibility: hidden;
+}
+#popup.active{
+    top:40%;
+    visibility: visible;
+    opacity:1;
+    transition: 0.5s;
 }
 #cancel{
     float: right;

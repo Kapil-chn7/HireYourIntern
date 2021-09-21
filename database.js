@@ -46,8 +46,25 @@ const editProfile=mongoose.Schema({
     //                     userInternshala:String,
     //                     userGitHub:String
                     
-    userdata:Object,
-    userImage:Object
+    userName: String,
+    userEmail: String,
+    userTags: String,
+    userState: String,
+    userGender: String,
+    userCollege: String,
+    userAge: String,
+    userLinkdin: String,
+    userGithub: String,
+    userBranch: String,
+    userCollegeJoiningDate: String,
+    userCollegeEndingDate: String,
+    userDescription: String,
+    userProfileImage:Object,
+    userResume:Object,
+    authentication_Id:{
+        type:String,
+        require:true
+    }
                 
 },
 {

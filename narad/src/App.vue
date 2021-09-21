@@ -33,5 +33,16 @@ export default {
   margin: 0px;
   padding: 0px;
 }
+::-webkit-scrollbar{
+    width:12px;
+    
+}
+::-webkit-scrollbar-thumb{
+    background: linear-gradient(transparent,#30ff00);
+    border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background: linear-gradient(transparent,#2212b8);
+}
   
 </style>

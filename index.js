@@ -23,17 +23,8 @@ app.listen(PORT,()=>{
 const database=require('./database')
 
 const session=require('express-session')
-// app.use((req,res,next)=>{
-
-//   res.setHeader("Access-Control-Allow-Origin","*");
-//   res.setHeader("Acess-Control-Allow-Headers",
-//   "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-
-//   res.setHeader('Access-Control-Allow-Methods','PUT, POST, PATCH, DELETE, GET, OPTIONS');
-  
-//   next();
-// });
-
+//storing session in database during otp time
+const MongoStore=require('connect-mongo')(session);
 app.use(cors({credentials:true,
 origin:true,
 methods:['PUT, POST, PATCH, DELETE, GET'],
@@ -44,25 +35,12 @@ app.use(express.urlencoded({extended:true}))
 
 
 
-//   app.use(cookieSession({
-//     name:'session',
-//     maxAge: 24 * 60 * 60 * 1000,
-//     keys: 'tattiKarkenaacho'
-// }));
-
-app.use(cookieParser({
-  name:'cookie',
+app.use(cookieParser('hola',{
+  name:'user_sid',
   maxAge: 24 * 60 * 60 * 1000
 }));
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {httpOnly:true, path:'/refresh',secure: true }
-}))
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 
 
@@ -79,46 +57,24 @@ useNewUrlParser: true
 
 
 
+console.log("mongostore",MongoStore)
+// }))
+app.use(session({
+  key:'user_sid',
+  resave:false,
+  saveUninitialized:false,
+  secret:"this is me",
+  name:'cookie1',
+  store:new MongoStore({mongooseConnection:mongoose.connection,
+    collection:'collectionOTP',
+    autoRemove:'native',
+    
+  ttl:60*100})
 
-// app.get('/login',passport.authenticate('local', { failureRedirect: '/login' }),
-// (req, res)=> {
-//   res.sendStatus(200);
-// });
+}))
 
-const jwt=require('jsonwebtoken')
-// app.get('/login',(req,res)=>{
-//   console.log("inside of the login post method");
-//   const userdata={
-//     username:'Kapil Chauhan',
-//     userpassword:'Kapil@123'
-//   }
-//   const token=jwt.sign({
-//     username:'Kapil Chauhan',
-//     userpassword:'Kapil@123'
-//   },'kapilchauhan@123');
 
-//   res.cookie('OTP','fg');
-//   console.log("this is the Token",req.cookies);
-//   res.send('kapil Chauhan')
-// })
-
-//google authentication
-
-// app.get('/auths',async(req,res)=>{
-//     console.log('inside of the user authentication');
-//     await axios.get('http://localhost:5000/auth/google')
-//      .then((resp)=>{
-         
-//         console.log("this is axios");
-//         res.end()
-//      })
-//      .catch(err=>{
-//          console.log("this is the err",err);
-//      })
-   
-// })
-
-const cookieMiddleware=require('./Middleware/cookieMiddleware')
+const cookieMiddleware=require('./Middleware/cookieMiddleware');
 app.use('/auth',cookieMiddleware,googleauthentication);
 app.post('/validateUser',cookieMiddleware,(req,res)=>{
   console.log("This is the request.body")
@@ -132,240 +88,29 @@ app.post('/validateUser',cookieMiddleware,(req,res)=>{
 app.post('/checkCookies',cookieMiddleware,(req,res)=>{
   
   console.log("Inside of router /checkcookies ...................");
- 
- const cookievalue=req.cookies
-  console.log("This is the value of the cookie ", cookievalue);
-  if(!cookievalue['authentication_Id'] && req.loggedIn==false){
-    console.log("Returning from here")
-    res.status(200).send({exist:false});
-  }
-  else{
-    console.log("THis is req.loggedIN,,,,,,,,,,,,,,,,,,,,",req.loggedIn)
-    if(req.loggedIn==true){
 
-      res.status(200).send({
-        exist:true,
-        cookievalue: req.cookies.authentication_Id
-      }
-      )
-    }
-    else{
-      console.log("returning from here")
-      res.status(200).send({exist:false});
-    }
-  }
-})
-
-// app.get('/auth/google',(req,res)=>{
-//     console.log("this is the res");
-//  res.sendStatus(200)
-// })
-// app.get('/Chat',(req,res)=>{
-// var newurl='http://localhost:5000/auth/google';
-// request(newurl).pipe(res);
-
-// })
-app.get('/username',(req,res)=>{
-  yourPassword='KapilChn@123'
-  console.log("this is the cookie data",req.cookies.OTP);
-  bcrypt.hash(yourPassword, 2, (err, hash) => {
-    console.log("This is the hashed password",hash);
-
-    // Now we can store the password hash in db.
-  });
-  
-  res.send('hello')
-
-  console.log('this is form userOPT')
-})
-
-//OTP generator
-
-function OTPgenerator(){
-return new Promise(async(resolve,reject)=>{
-
-
-  var string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-  
-  let OTPvalue='';
- 
- // Find the length of string 
- var len = string.length; 
- for (let i = 0; i < 8; i++ ) { 
-     OTPvalue += string[Math.floor(Math.random() * len)]; 
- } 
-console.log(OTPvalue,"OTP value");
-await bcrypt.hash('sfdasdsffafds',10)
-.then(resp=>{
-  console.log("this is resp",resp);
-  resolve(resp);
-})
-.catch(err=>{
-  console.log("this is the error",err);
-  reject(err);
-})
-
-})
-
-
-
-}
-
-const confirmation_email=require('./nodemailer');
-const { cookie } = require('request');
-const { json } = require('body-parser');
-const { fstat } = require('fs');
-
-async function middleware1(req,res,next){
-
-  console.log("OTP details",req.body);
-
-  const otpGenerated=otpGenerator.generate(8, { upperCase: false, specialChars: false });
-console.log("Otp generated",otpGenerated)
-  //this is the await
-  
- 
-
-}
-
-
-
-app.post('/signup',cookieMiddleware,(req,res)=>{
-  console.log("this is from the signup area");
-  res.send('hi')
-})
-
-const fs =require('fs')
-app.post('/updateProfile',upload.single('userImage'),async(req,res)=>{
-  
-  
-var authentication_Id='114119276291106471990';
-console.log("req",req.file);
-var userdata;
-if(req.file==undefined){
- userdata={
-    userDetails:req.body,
-    userImage:null
-  }
-}
-else{
- userdata={
-    userDetails:req.body,
-    userImage:req.file.buffer
-  }
-}
-// fs.writeFile(`./Images/${req.file.originalname}`,req.file.buffer,'base64',()=>{
-//   console.log("This is the file in the fs")
-// })
-var user=new database.editProfile(userdata);
-console.log("This is userdata",userdata)
-//   database.editProfile.findOne({'authentication_Id':authentication_Id},(err,user)=>{
-//     if(err){
-//        console.log("This is the error",err);
-       
-//        // if(err==null){
-//        //   database.userauth.inserOne({'session_Id':session_Id,'authentication_Id':authentication_Id})
-//        // }
-//        // else{
-//        //    console.log("Something went wrong",err);
-//        // }
-
-       
-//     }
-//     else{
-//          if(!user){
-//          database.editProfile.create({'userData':userdata});
-//          console.log("this is hwer");
-     
-         
-//          return res.status(200).send('user has been updated');
-//        }
-//        else{
-//           console.log("User Exist",user);
-       
-//           database.editProfile.findOneAndUpdate({'authentication_Id':authentication_Id},{useFindAndModify:true},(err,user)=>{
-//              if(err){
-//                 console.log("this is the error");
-//                 res.status(500).send("something went wrong")
-//              }
-//              else{
-//                 console.log("User",user)
-//              }
-//           });
-      
-          
-//           res.status(200).send('UpdatedUser')
-//        }
-//     }
- 
-   
-//  })
-
-
- await database.editProfile.updateOne({'authentication_Id':authentication_Id},{$set:{
-  'userdata':userdata
- }},(err,user)=>{
-  if(err){
-     console.log("this is the error");
-     res.status(500).send("something went wrong")
-  }
-  else{
-     console.log("User",user);
-     res.status(200).send('UpdatedUser')
-  }
-});
-
-})
-
-
-app.post('/updateProfiles',upload.single('userImage'),(req,res)=>{
-  console.log("This is teh rre",req.body,req.file);
-
-
-})
-app.get('/userdata',(req,res)=>{
-  console.log("this is me")
-  console.log('req.params',req.query.payload);
-  var authentication_Id='114119276291106471990';
-  database.editProfile.findOne({'authentication_Id':authentication_Id},(err,user)=>{
-    if(err){
-       console.log("This is the error",err);
-       
-       // if(err==null){
-       //   database.userauth.inserOne({'session_Id':session_Id,'authentication_Id':authentication_Id})
-       // }
-       // else{
-       //    console.log("Something went wrong",err);
-       // }
-
-       
-    }
-    else{
-         if(!user){
-         
-         console.log("User does'nt exist")
-         
-         return res.status(304).send('user does\'nt exist');
-       }
-       else{
-          console.log("User Exist",user);
-
-          return res.status(200).send(user)
-
-          }
-      
-          
-          
-       }
+  if(req.loggedIn==false){
+    console.log("User is invalid");
     
- 
+    res.status(403).send({exist:false});
+  }
+  else if(req.loggedIn==true){
+      console.log("this is the user",req.userId);
+      res.status(200).send({exist:true, userId:req.userId})
+  }
+  else{
+    console.log('server error');
+    res.status(500).send({exist:false});
    
- })
+  }
+
 })
-var rand = require("random-key");
+
+
+
 const postdata=require('./database2');
-const encrypt=require('./uniqueId');
-const decrypt=require('./decrypt')
+const decrypt=require('./decrypt');
+const imgwithdata = require('./postdataNfile');
 app.post('/userpost',upload.single('file'),async (req,res)=>{
 
 var fileAvailable='F';
@@ -384,7 +129,7 @@ const decryptPassword=await decrypt.decrypt(authenticationCookie , 'D');
 
 
 if(decryptPassword!=false){
-  postdata.findOne({authentication_Id:decryptPassword},function(err,user){
+  postdata.findOne({authentication_Id:decryptPassword},async function(err,user){
 
     if(err){
       console.log("This is the error from the userPost",err)
@@ -392,74 +137,117 @@ if(decryptPassword!=false){
     else{
     
       if(user){
-        console.log("This is the user",user);
+        
 
         if(req.file==undefined){
-
-          const post =new postdata({
-            userPost:req.body,
-            authentication_Id:decryptPassword
-          });
+          console.log("This is the 1")
+          var post={
+            userPost:req.body
+          }
           
-          // post.save()
-          // .then((resp)=>{
-          //   console.log("This is the post data",resp)
-          // })
-          // .catch((err)=>{
-          //   console.log("This is the error",err)
-          // })
+       
 
-          user.$push(post);
+         await  postdata.findOneAndUpdate({authentication_Id:decryptPassword}
+          ,{$addToSet:{
+
+            userPostData:post
+          }},{
+
+
+            $push:{
+              userPostData:post
+            }
+          },(err,userval)=>{
+            if(err){
+              console.log("This is the error",err);
+              res.send(409)
+            }
+            else{
+              console.log("This is the user",userval)
+              res.send(200)
+            }
+          })
+
+        
+         
         }
         else {
-
-          var post =new postdata({
+          console.log("This is the 2")
+    
+          const post={
             userPost:req.body,
-            authentication_Id:decryptPassword,
             userPostImage:req.file.buffer
-          });
+          }
+         
+
+          await  postdata.findOneAndUpdate({authentication_Id:decryptPassword},{$addToSet:{
+
+            userPostData:post
+          }},{
+
           
-          post.save()
-          .then((resp)=>{
-            console.log("This is the post data",resp)
-          })
-          .catch((err)=>{
-            console.log("This is the error",err)
+            $push:{
+              userPostData:post
+            }
+            
+          },(err,userval)=>{
+            if(err){
+              console.log("This is the error",err);
+              res.send(409)
+            }
+            else{
+              console.log("This is the user");
+              res.send(409)
+            }
           })
         }
 
 
       }
       else {
-        console.log("UserNot find",user);
         
-       if(fileAvailable=='T'){
         
-          var post =new postdata({
-            userPost:req.body,
-            authentication_Id:decryptPassword,
-            userPostImage:req.file.buffer
-          });
+       if(fileAvailable=='T' ){
+        console.log("This is the 3")
+
+          const postdataval={
+                userPost:req.body,
+               userPostImage:req.file.buffer
+          }
+          console.log("This is the value of the postdata Array",req.file.buffer)
+         const post=new postdata({
+              userPostData:[postdataval],
+            authentication_Id:decryptPassword
+         })
           post.save()
-          .then((resp)=>{
-            console.log("This is the post data",resp)
+          .then(async(resp)=>{
+            console.log("This is the response");
+            res.send(200)
           })
           .catch((err)=>{
             console.log("This is the error",err)
+            res.send(409)
           })
          
         }
          else if(fileAvailable=='F'){
-          const post =new postdata({
-            userPost:req.body,
+          console.log("This is the 4")
+          const dataval={
+            userPost:req.body
+          }
+         const post=new postdata({
+              userPostData:[dataval],
             authentication_Id:decryptPassword
-          });
+         })
+       
           post.save()
-          .then((resp)=>{
-            console.log("This is the post data",resp)
+          .then(async(resp)=>{
+            console.log("File is not available");
+            res.send(200)
           })
           .catch((err)=>{
-            console.log("This is the error",err)
+            console.log("This is the error",err);
+            res.send(409)
           })
          
        }
@@ -478,7 +266,7 @@ else{
 
   console.log("The cookie is wrong")
 
-  res.sendStatus(404)
+  res.sendStatus(401)
 }
 
 
@@ -493,3 +281,52 @@ else{
   
 })
 
+const createProject=require('./routes/createProject')
+app.use('/createProject',createProject);
+
+
+
+//getting userPost
+
+const getUserPost=require('./routes/getUserProjects')
+app.use('/getUserPost',getUserPost);
+
+
+
+//updateProfile
+
+const updateProfileRoute=require('./routes/editUserProfile')
+app.use('/editUserProfile',cookieMiddleware,updateProfileRoute)
+
+
+
+//register or login
+
+
+//register
+
+const userRegistration=require('./routes/Register_and_Login/Register');
+app.use('/userRegistration',userRegistration)
+
+//checkOTP route
+
+const checkOTP=require('./routes/Register_and_Login/checkOTPvalue')
+app.use('/checkOTP',checkOTP)
+
+
+//refresh token
+
+const refreshToken=require('./routes/Register_and_Login/refreshToken')
+app.use('/refresh',refreshToken)
+
+
+//signin
+
+const signin=require('./routes/Register_and_Login/signin.js')
+app.use('/signin',signin)
+
+
+//fetching userdata
+
+const userdata=require('./routes/Fetchdata/userProfiledata.js');
+app.use('/userdata',userdata)

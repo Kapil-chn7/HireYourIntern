@@ -3,9 +3,12 @@ import axios from 'axios'
 // import { param } from "../../routes/routes";
 const store = createStore({
    state:{
+       userId:null,
+       userIsLoggedIn:false,
       path:'Home',
       showLoader:false,
       userImage:null,
+      authentication_Id:null,
 
 
       //this is the user profile
@@ -13,7 +16,15 @@ const store = createStore({
 
    },
    mutations:{
-
+       userId:(state,payload)=>{
+        state.userId=payload;
+       },
+       userIsLoggedInChange:(state,payload)=>{
+        state.userIsLoggedIn=payload;
+       },
+        authentication_IdChange:(state,payload)=>{
+            state.authentication_Id=payload
+        },
         changePath: (state,payload)=>{
             state.path=payload;
             
@@ -40,19 +51,23 @@ const store = createStore({
        },
        getProfile: state=>{
            return state.userProfile;
+       },
+       getuserIsLoggedIn: state=>{
+           return state.userIsLoggedIn
        }
    },
    actions:{
-       getUserData:async(context,payload)=>{
-        const data=await axios.get('/api/userdata',{params:{payload}})
+       getUserData:async(context)=>{
+           const userId=store.state.userId
+        const data=await axios.get('/api/userdata',{params:{userId}})
         console.log("This is datasssss",data.data);
         context.commit('changeUserInfo',data.data);
         context.commit('changeshowLoader');
         // var arr=data.data.userdata.userImage.split('"');
-        var arr=data.data.userdata.userImage;
+        
 
-        console.log("data",data.data.userdata.userImage)
-        context.commit('changeUserImage',arr)
+        
+        
         
        }
    }
