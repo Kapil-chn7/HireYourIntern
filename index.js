@@ -1,6 +1,6 @@
 const express=require('express')
 const app=express();
-const PORT=5000;
+const PORT=5000 || process.env.PORT;
 const cors=require('cors')
 const bodyParser=require('body-parser')
 const cookieSession=require('cookie-session');
@@ -20,6 +20,13 @@ app.listen(PORT,()=>{
     console.log(`Server listening on port ${PORT}`);
 })
 
+
+if(process.env.NODE_ENV=='production'){
+  app.use(express.static(__dirname + '/dist/'));
+  app.get('/.*/', (req,res)=>{
+    res.sendFile(__dirname + '/public/index.html')
+  })
+}
 const database=require('./database')
 
 const session=require('express-session')
