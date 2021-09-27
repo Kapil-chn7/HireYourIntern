@@ -92,27 +92,6 @@ app.post('/validateUser',cookieMiddleware,(req,res)=>{
 
 
 
-app.post('/checkCookies',cookieMiddleware,(req,res)=>{
-  
-  console.log("Inside of router /checkcookies ...................");
-
-  if(req.loggedIn==false){
-    console.log("User is invalid");
-    
-    res.status(403).send({exist:false});
-  }
-  else if(req.loggedIn==true){
-      console.log("this is the user",req.userId);
-      res.status(200).send({exist:true, userId:req.userId})
-  }
-  else{
-    console.log('server error');
-    res.status(500).send({exist:false});
-   
-  }
-
-})
-
 
 
 const postdata=require('./database2');
@@ -287,6 +266,17 @@ else{
 
   
 })
+
+
+//check Cookie to know whether user is valid or not
+
+const checkCookies=require('./routes/Fetchdata/checkCookies');
+app.use('/checkCookies',checkCookies);
+
+
+
+
+//create Project this create user project
 
 const createProject=require('./routes/createProject')
 app.use('/createProject',createProject);
