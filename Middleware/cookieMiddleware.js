@@ -21,7 +21,7 @@ const jwt=require('jsonwebtoken');
 
                 try{
                     
-                 await axios.post('http://localhost:5000/refresh',{usertoken:req.cookies['refreshToken']})
+                 await axios.post('/refresh',{usertoken:req.cookies['refreshToken']})
                 .then((response)=>{
                  
                     req.loggedIn=true;
