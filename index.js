@@ -27,6 +27,13 @@ if(process.env.NODE_ENV=='production'){
     res.sendFile(__dirname + '/public/index.html')
   })
 }
+
+if(process.env.NODE_ENV=='production'){
+   urlvalue='https://glacial-scrubland-67894.herokuapp.com'
+}
+else{
+  urlvalue='http://localhost:5000'
+}
 const database=require('./database')
 
 const session=require('express-session')
@@ -327,3 +334,5 @@ app.use('/signin',signin)
 
 const userdata=require('./routes/Fetchdata/userProfiledata.js');
 app.use('/userdata',userdata)
+
+

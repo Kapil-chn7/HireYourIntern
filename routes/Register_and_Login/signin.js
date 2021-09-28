@@ -21,9 +21,9 @@ route.post('/',(req,res)=>{
                                 res.sendStatus(500)
                             }
                             else{
-                                console.log("value is",value);
+                                console.log("signin is",value);
                                 if(value==true){
-                                  const token=  jwt.sign({token:user._id.toJSON()},'skdjanldfnmlasmfalkfsalkfas',{expiresIn: '30m' });
+                                  const token=  jwt.sign({token:user._id.toJSON()},'skdjanldfnmlasmfalkfsalkfas',{expiresIn: '5h' });
                                   const refreshToken= jwt.sign({refreshToken:user._id.toJSON()},'sadfkjashdkjkfdakjllkf',{expiresIn:'7d'})
                                                
                                                res.cookie('cookieName', token, {httpOnly: true });

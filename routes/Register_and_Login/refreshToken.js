@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken')
 const route=express.Router()
 
 route.post('/',(req,res)=>{
-    console.log("Inside of vlaue",req.body)
+    console.log("Refresh token",req.body)
     if(!req.body.usertoken){
         console.log("Inside of vlaue111111",req.body.usertoken)
         res.sendStatus(403);
@@ -20,7 +20,7 @@ route.post('/',(req,res)=>{
                    const value= jwt.decode(req.body.usertoken,{complete:true})
                     console.log("value",value.header,value.payload.refreshToken)
                     
-                    const token= jwt.sign({token:value.payload.refreshToken},'skdjanldfnmlasmfalkfsalkfas',{expiresIn: '30m' },(err,val)=>{
+                     jwt.sign({token:value.payload.refreshToken},'skdjanldfnmlasmfalkfsalkfas',{expiresIn: '30m' },(err,val)=>{
                         if(err){
                             console.log("errrrrrrrrrrrrrrrrrrrrrr",err);
                             res.sendStatus(403)
