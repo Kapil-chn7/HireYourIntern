@@ -4,6 +4,7 @@ const axios =require('axios')
 const jwt=require('jsonwebtoken');
 
  async function checkJwtToken(req,res,next){
+     console.log("Inside of middleware",req.cookies)
 
     if(!req.cookies['cookieName'] || !req.cookies['refreshToken']){
 

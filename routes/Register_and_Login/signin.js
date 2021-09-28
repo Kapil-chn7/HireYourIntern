@@ -27,7 +27,8 @@ route.post('/',(req,res)=>{
                                   const refreshToken= jwt.sign({refreshToken:user._id.toJSON()},'sadfkjashdkjkfdakjllkf',{expiresIn:'7d'})
                                                
                                                res.cookie('cookieName', token, {httpOnly: true });
-                                               res.cookie('refreshToken',refreshToken,{httpOnly:true})
+                                               res.cookie('refreshToken',refreshToken,{httpOnly:true});
+                                              
                                  
                                     res.sendStatus(201);
                                 }
